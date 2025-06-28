@@ -7,9 +7,6 @@ function addBookmark() {
   if (name && url) {
     bookmarks.push({ name, url });
 
-    // Sort by name (key)
-    bookmarks.sort((a, b) => a.name.localeCompare(b.name));
-
     displayBookmarks();
 
     document.getElementById("bookmarkName").value = '';
@@ -17,13 +14,25 @@ function addBookmark() {
   }
 }
 
+function removeBookmark(index) {
+  bookmarks.splice(index, 1);
+  displayBookmarks();
+}
+
 function displayBookmarks() {
   const list = document.getElementById("bookmarkList");
   list.innerHTML = '';
 
-  bookmarks.forEach(bookmark => {
-    const li = document.createElement('li');
-    li.innerHTML = `<a href="${bookmark.url}" target="_blank">${bookmark.name}</a>`;
-    list.appendChild(li);
+  bookmarks.forEach((bookmark, index) => {
+    const div = document.createElement('div');
+    div.className = 'bookmark';
+
+    div.innerHTML = `
+      <span class="bookmark-title">${bookmark.name}</span>
+      <a href="${bookmark.url}" target="_blank">Visit</a>
+      <button onclick="removeBookmark(${index})">Remove</button>
+    `;
+
+    list.appendChild(div);
   });
 }
